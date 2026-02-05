@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
 
 interface RankFlameProps {
     rank: 1 | 2 | 3;
@@ -21,7 +21,7 @@ export default function RankFlame({ rank }: RankFlameProps) {
         },
         3: {
             // Yellow Fire
-            start: "rgba(255, 200, 0, 1)",
+            start: "rgba(255, 180, 0, 1)",
             end: "rgba(255, 50, 0, 0)",
         }
     }[rank];
@@ -34,8 +34,8 @@ export default function RankFlame({ rank }: RankFlameProps) {
         setParticles([...Array(65)].map((_, i) => ({
             id: i,
             // Concentrate in center but width depends on particle size
-            // We want a solid core
-            left: (15 + Math.random() * 70) + "%",
+            // We want a solid core, centered around 50%
+            left: (50 + (Math.random() - 0.5) * 60) + "%", // Random between 20% and 80%
             delay: Math.random() * 0.8 + "s",
             duration: 0.8 + Math.random() * 0.6 + "s",
             size: 20 + Math.random() * 40 + "px", // MUCH larger particles
@@ -43,19 +43,22 @@ export default function RankFlame({ rank }: RankFlameProps) {
     }, []);
 
     return (
-        <div className="absolute inset-x-0 bottom-[-10%] h-[120%] w-full pointer-events-none overflow-visible flex justify-center z-[-1]">
+        <div
+            className="absolute inset-x-0 bottom-[-10%] h-[120%] w-full pointer-events-none overflow-visible flex justify-center z-[-1]"
+            style={{ contain: 'layout style' }}
+        >
             <style jsx>{`
                 @keyframes rise {
                     from {
                         opacity: 0;
-                        transform: translateY(0) scale(1);
+                        transform: translateX(-50%) translateY(0) scale(1);
                     }
                     25% {
                         opacity: 1;
                     }
                     to {
                         opacity: 0;
-                        transform: translateY(-200%) scale(0);
+                        transform: translateX(-50%) translateY(-200%) scale(0);
                     }
                 }
             `}</style>
@@ -75,7 +78,8 @@ export default function RankFlame({ rank }: RankFlameProps) {
                             animationDelay: p.delay,
                             opacity: 0,
                             transformOrigin: "bottom center",
-                            transform: "translateX(-50%)"
+                            willChange: "transform, opacity",
+                            contain: "layout",
                         }}
                     />
                 ))}

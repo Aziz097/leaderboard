@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import GlassSurface from "./GlassSurface";
+import LazyGlassSurface from "./LazyGlassSurface";
 import RankFlame from "./RankFlame";
 
 type Donor = {
@@ -14,10 +14,10 @@ const donors: Donor[] = [
     { name: "Dito Rifki", amount: "Rp 10.000.000" },
     { name: "Juan Putra", amount: "Rp 8.500.000" },
     { name: "Elkana Juanro", amount: "Rp 7.000.000" },
-    { name: "Fedana", amount: "Rp 5.000.000" },
-    { name: "Fadil Zurani", amount: "Rp 4.500.000" },
+    { name: "Fedana Padang", amount: "Rp 5.000.000" },
+    { name: "Fadil Malaysia", amount: "Rp 4.500.000" },
     { name: "Juragan Matcha", amount: "Rp 3.000.000" },
-    { name: "Pricelia", amount: "Rp 2.500.000" },
+    { name: "Anak Kades", amount: "Rp 2.500.000" },
     { name: "Budi Ganteng", amount: "Rp 2.000.000" },
     { name: "Arief NMax", amount: "Rp 1.500.000" },
     { name: "Bos GPT", amount: "Rp 1.000.000" },
@@ -83,7 +83,7 @@ export function Leaderboard() {
                                     delay: delay
                                 }}
                             >
-                                <GlassSurface
+                                <LazyGlassSurface
                                     width={256}
                                     height="auto"
                                     borderRadius={20}
@@ -110,7 +110,7 @@ export function Leaderboard() {
                                             <p className={`text-sm md:text-xl mt-1 font-bold ${isFirst ? 'text-white drop-shadow-[0_0_5px_rgba(0,123,255,0.5)]' : 'text-white'}`}>{donor.amount}</p>
                                         </div>
                                     </div>
-                                </GlassSurface>
+                                </LazyGlassSurface>
                             </motion.div>
                         </motion.div>
                     );
@@ -129,7 +129,7 @@ export function Leaderboard() {
                         key={donor.name}
                         variants={item}
                     >
-                        <GlassSurface
+                        <LazyGlassSurface
                             width="100%"
                             height="auto"
                             borderRadius={12}
@@ -149,7 +149,7 @@ export function Leaderboard() {
                                     {donor.amount}
                                 </span>
                             </div>
-                        </GlassSurface>
+                        </LazyGlassSurface>
                     </motion.div>
                 ))}
             </motion.div>

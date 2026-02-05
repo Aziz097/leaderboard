@@ -138,9 +138,14 @@ export default function ColorBends({
     const pointerTargetRef = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
     const pointerCurrentRef = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
     const pointerSmoothRef = useRef<number>(8);
+    const [webGLError, setWebGLError] = React.useState<boolean>(false);
 
     useEffect(() => {
         const container = containerRef.current!;
+
+        // Check if WebGL is available before proceeding
+        if (!container) return;
+
         const scene = new THREE.Scene();
         const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
@@ -173,19 +178,38 @@ export default function ColorBends({
         const mesh = new THREE.Mesh(geometry, material);
         scene.add(mesh);
 
-        const renderer = new THREE.WebGLRenderer({
-            antialias: false,
-            powerPreference: 'high-performance',
-            alpha: true
-        });
-        rendererRef.current = renderer;
-        (renderer as any).outputColorSpace = (THREE as any).SRGBColorSpace;
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-        renderer.setClearColor(0x000000, transparent ? 0 : 1);
-        renderer.domElement.style.width = '100%';
-        renderer.domElement.style.height = '100%';
-        renderer.domElement.style.display = 'block';
-        container.appendChild(renderer.domElement);
+        // Try to create WebGL renderer with error handling
+        let renderer: THREE.WebGLRenderer;
+        try {
+            renderer = new THREE.WebGLRenderer({
+                antialias: false,
+                powerPreference: 'high-performance',
+                alpha: true,
+                failIfMajorPerformanceCaveat: false
+            });
+
+            // Test if the context is valid
+            const gl = renderer.getContext();
+            if (!gl || gl.isContextLost()) {
+                throw new Error('WebGL context is not available');
+            }
+
+            rendererRef.current = renderer;
+            (renderer as any).outputColorSpace = (THREE as any).SRGBColorSpace;
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+            renderer.setClearColor(0x000000, transparent ? 0 : 1);
+            renderer.domElement.style.width = '100%';
+            renderer.domElement.style.height = '100%';
+            renderer.domElement.style.display = 'block';
+            container.appendChild(renderer.domElement);
+        } catch (error) {
+            console.warn('WebGL is not available. Falling back to CSS gradient:', error);
+            setWebGLError(true);
+            // Clean up
+            geometry.dispose();
+            material.dispose();
+            return;
+        }
 
         const clock = new THREE.Clock();
 
@@ -305,6 +329,35 @@ export default function ColorBends({
             container.removeEventListener('pointermove', handlePointerMove);
         };
     }, []);
+
+    // Fallback gradient when WebGL is not available
+    if (webGLError) {
+        const gradientColors = colors.length > 0
+            ? colors
+            : ['#4F46E5', '#7C3AED', '#DB2777'];
+
+        const gradientStyle = {
+            background: `linear-gradient(${rotation}deg, ${gradientColors.join(', ')})`,
+            animation: 'gradientShift 8s ease infinite',
+            ...style
+        };
+
+        return (
+            <>
+                <style>{`
+                    @keyframes gradientShift {
+                        0%, 100% { opacity: 1; filter: hue-rotate(0deg); }
+                        50% { opacity: 0.9; filter: hue-rotate(20deg); }
+                    }
+                `}</style>
+                <div
+                    ref={containerRef}
+                    className={`w-full h-full relative overflow-hidden ${className}`}
+                    style={gradientStyle}
+                />
+            </>
+        );
+    }
 
     return <div ref={containerRef} className={`w-full h-full relative overflow-hidden ${className}`} style={style} />;
 }

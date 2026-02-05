@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import Image from "next/image";
-import GlassSurface from "./GlassSurface";
+import LazyGlassSurface from "./LazyGlassSurface";
 
 export function FooterCTA() {
     const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +15,7 @@ export function FooterCTA() {
     };
 
     const handleConfirm = () => {
-        const message = `Halo, saya baru saja melakukan donasi dengan detail berikut:%0A%0ANama: ${name}%0A%0ASaya melampirkan bukti transfer di chat ini. Mohon dikonfirmasi. Terima kasih!`;
+        const message = `Halo, saya baru saja melakukan donasi dengan detail berikut:%0A%0ANama: ${name}%0A%0ASaya akan mengirimkan bukti transfer di chat ini. Mohon dikonfirmasi. Terima kasih!`;
         window.open(`https://wa.me/6287751861137?text=${message}`, '_blank');
     };
 
@@ -57,71 +57,111 @@ export function FooterCTA() {
                             transition={{ duration: 0.5, ease: "easeInOut" }}
                             className="overflow-hidden w-full"
                         >
-                            <GlassSurface
+                            <LazyGlassSurface
                                 borderRadius={24}
                                 opacity={0.3}
-                                className="p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center text-left"
+                                className="p-6 md:p-8 w-full"
                             >
-                                {/* QRIS Section */}
-                                <div className="flex flex-col items-center gap-4 w-full md:w-1/2">
-                                    <div className="relative w-full aspect-square max-w-[280px] bg-white rounded-xl overflow-hidden p-2">
-                                        {/* Using the image found in public directory */}
-                                        <div className="relative w-full h-full">
-                                            <Image
-                                                src="/qris.jpeg"
-                                                alt="QRIS Code"
-                                                fill
-                                                className="object-contain"
-                                            />
+                                <div className="flex flex-col gap-8 w-full">
+                                    {/* Top: Steps Timeline - Full Width */}
+                                    <div className="w-full bg-black/20 p-6 rounded-xl border border-white/5 backdrop-blur-sm">
+                                        <h4 className="text-white font-semibold mb-6 text-sm text-center">Cara Donasi:</h4>
+                                        <div className="relative flex items-center justify-between w-full">
+                                            {/* Connecting Line */}
+                                            <div className="absolute top-[14px] left-0 right-0 h-[2px] bg-white/10 -z-10" />
+
+                                            {[
+                                                { id: 1, label: "Scan QRIS", icon: "📱" },
+                                                { id: 2, label: "Input Nominal", icon: "💰" },
+                                                { id: 3, label: "Bayar", icon: "✅" },
+                                                { id: 4, label: "Screenshot", icon: "📸" },
+                                                { id: 5, label: "Konfirmasi", icon: "💬" }
+                                            ].map((step, index) => (
+                                                <div key={step.id} className="flex flex-col items-center gap-2 group cursor-default">
+                                                    <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-accent-primary/20 border border-accent-primary text-accent-primary flex items-center justify-center text-xs md:text-sm font-bold shadow-[0_0_10px_-2px_var(--color-accent-primary)] z-10 group-hover:scale-110 transition-transform bg-black">
+                                                        {step.id}
+                                                    </div>
+                                                    <div className="flex flex-col items-center">
+                                                        <span className="text-[10px] md:text-xs text-white/50 font-medium text-center whitespace-nowrap leading-tight group-hover:text-white transition-colors">{step.label}</span>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                    </div>
+
+                                    {/* Bottom: 2 Columns Grid (QRIS + Form) */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full items-start">
+                                        {/* Left Column: QRIS */}
+                                        <div className="flex flex-col items-center justify-center gap-4 w-full">
+                                            <div
+                                                className="relative w-full aspect-square max-w-[280px] bg-white rounded-xl overflow-hidden p-2 shadow-2xl shadow-accent-primary/20 cursor-pointer group"
+                                                onDoubleClick={() => {
+                                                    const link = document.createElement('a');
+                                                    link.href = '/qris.jpeg';
+                                                    link.download = 'QRIS-Gerai-Miku.jpeg';
+                                                    link.click();
+                                                }}
+                                                title="Double click to download QRIS"
+                                            >
+                                                <div className="relative w-full h-full">
+                                                    <Image
+                                                        src="/qris.jpeg"
+                                                        alt="QRIS Code"
+                                                        fill
+                                                        className="object-contain"
+                                                        sizes="(max-width: 768px) 280px, 280px"
+                                                        loading="lazy"
+                                                        quality={75}
+                                                    />
+
+                                                    {/* Download Hint Overlay */}
+                                                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                                        <p className="text-white text-xs font-semibold px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20">
+                                                            Double click to download
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="text-center">
+                                                <p className="text-white font-bold text-lg">a.n Gerai Miku</p>
+                                                <p className="text-white/70 text-sm">Double click to download QRIS</p>
+                                            </div>
+                                        </div>
+
+                                        {/* Right Column: Form */}
+                                        <div className="flex flex-col gap-8 w-full max-w-md mx-auto md:mx-0">
+                                            <div className="text-center md:text-left">
+                                                <h3 className="text-2xl font-bold text-white mb-2">Konfirmasi Donasi</h3>
+                                                <p className="text-white/60 text-sm">
+                                                    Terima kasih atas dukungan Anda! Silakan isi nama Anda untuk konfirmasi.
+                                                </p>
+                                            </div>
+
+                                            <div className="space-y-4">
+                                                <div className="flex flex-col gap-4">
+                                                    <label className="text-sm font-medium text-white text-center md:text-left">Nama Donatur</label>
+                                                    <input
+                                                        type="text"
+                                                        value={name}
+                                                        onChange={(e) => setName(e.target.value)}
+                                                        placeholder="Contoh: Orang Baik"
+                                                        className="w-full px-4 py-4 rounded-xl bg-black/30 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-accent-primary/50 transition-colors"
+                                                    />
+                                                </div>
+
+                                                <button
+                                                    onClick={handleConfirm}
+                                                    className="w-full mt-8 px-6 py-3.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/20 group"
+                                                >
+                                                    <span>Konfirmasi ke WhatsApp</span>
+
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="text-center">
-                                        <p className="text-white font-bold text-lg">a.n Gerai Miku</p>
-                                        <p className="text-white/70 text-sm">Scan QRIS untuk donasi</p>
-                                    </div>
                                 </div>
-
-                                {/* Form Section */}
-                                <div className="flex flex-col gap-4 w-full md:w-1/2">
-                                    <h3 className="text-2xl font-bold text-white mb-2">Konfirmasi Donasi</h3>
-
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-white/80 ml-1">Nama Donatur</label>
-                                        <input
-                                            type="text"
-                                            value={name}
-                                            onChange={(e) => setName(e.target.value)}
-                                            placeholder="Contoh: Orang Baik"
-                                            className="w-full px-4 py-3 rounded-xl bg-black/30 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-accent-primary/50 transition-colors"
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <label className="text-sm font-medium text-white/80 ml-1">Bukti Transfer</label>
-                                        <div className="relative w-full">
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                className="w-full px-4 py-3 rounded-xl bg-black/30 border border-white/10 text-white/70 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-accent-primary/20 file:text-accent-primary hover:file:bg-accent-primary/30 transition-colors cursor-pointer"
-                                            />
-                                        </div>
-                                        <p className="text-xs text-white/40 ml-1">
-                                            *Sertakan bukti transfer saat mengirim pesan WhatsApp
-                                        </p>
-                                    </div>
-
-                                    <button
-                                        onClick={handleConfirm}
-                                        className="mt-4 px-6 py-3 bg-[#25D366] hover:bg-[#128C7E] text-white font-bold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/20"
-                                    >
-                                        <span>Konfirmasi ke WhatsApp</span>
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="opacity-90">
-                                            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.669-.7c.905.5 1.723.764 2.793.765 3.18 0 5.767-2.587 5.767-5.766.001-3.185-2.579-5.781-5.769-5.781zm0 13.891c-3.831 0-6.965-3.104-6.965-6.94 0-3.836 3.111-6.96 6.955-6.96 3.832 0 6.965 3.129 6.965 6.965 0 3.836-3.133 6.935-6.955 6.935z" fillOpacity=".5" />
-                                            <path d="M12.063 2C6.476 2 2 6.521 2 12.115a10.026 10.026 0 001.406 5.093L2.096 22l4.908-1.288A10.05 10.05 0 0012.063 22c5.59 0 10.063-4.52 10.063-10.096S17.653 2 12.063 2zm.019 18.067c-1.666-.003-3.12-.489-4.558-1.332l-.435-.247-2.906.762.777-2.825-.262-.48a8.04 8.04 0 01-1.353-4.814c.002-4.485 3.65-8.136 8.138-8.136 4.49 0 8.138 3.65 8.138 8.137-.002 4.485-3.652 8.935-7.539 8.935zm4.493-6.104c-.246-.123-1.454-.717-1.678-.8s-.387-.123-.553.124-.637.8-.781.964-.287.184-.533.061-1.042-.383-1.983-1.222c-.742-.661-1.243-1.478-1.388-1.725s-.015-.38.107-.503c.11-.11.246-.286.37-.43.123-.143.164-.245.246-.409s.041-.286-.021-.409c-.061-.123-.553-1.332-.758-1.824-.2-.492-.403-.425-.553-.433-.144-.008-.307-.009-.472-.009a.911.911 0 00-.656.307c-.226.245-.861.841-.861 2.05s.881 2.378 1.004 2.541c.123.164 1.733 2.646 4.2 3.717.587.254 1.045.408 1.401.522.596.19 1.139.163 1.57.099.479-.071 1.454-.594 1.659-1.168.205-.573.205-1.065.144-1.168-.062-.102-.226-.163-.472-.286z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </GlassSurface>
+                            </LazyGlassSurface>
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -129,4 +169,3 @@ export function FooterCTA() {
         </section>
     );
 }
-
