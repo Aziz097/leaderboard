@@ -188,19 +188,6 @@ export default function TambahDonaturPage() {
               </div>
             </div>
 
-            <div className="space-y-3">
-              <Label htmlFor="note" className="text-white/70">
-                Catatan (opsional)
-              </Label>
-              <Input
-                id="note"
-                placeholder="Untuk Inlineer 2022..."
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                className="bg-white/5 border-white/10 text-white placeholder:text-white/30 focus:border-accent-primary"
-              />
-            </div>
-
             <Button
               type="submit"
               className="w-full bg-gradient-to-r from-accent-primary to-accent-secondary hover:opacity-90 text-white border-0"
