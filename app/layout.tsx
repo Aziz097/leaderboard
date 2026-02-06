@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Toaster } from "@/components/ui/toaster";
+import { Provider } from "@/components/providers";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -41,15 +43,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={spaceGrotesk.variable}>
+    <html lang="en" className={`${spaceGrotesk.variable} dark`}>
       <body
         className={`antialiased bg-background text-foreground font-sans`}
         suppressHydrationWarning
       >
         <div className="noise-overlay" />
-        <main className="relative z-10 min-h-screen flex flex-col">
-          {children}
-        </main>
+        <Provider>
+          <Toaster />
+          <main className="relative z-10 min-h-screen flex flex-col">
+            {children}
+          </main>
+        </Provider>
 
         {/* Vercel Analytics & Speed Insights - automatically activated on Vercel */}
         <Analytics />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 const sentences = [
     "CUKUP BERJALAN JANGAN BERLARI KARENA HIDUP INI PERJALANAN BUKAN PELARIAN.",

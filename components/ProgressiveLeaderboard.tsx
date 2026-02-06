@@ -1,41 +1,38 @@
 "use client";
 
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { SimpleLeaderboard } from "./SimpleLeaderboard";
+import { Leaderboard, type DonorDisplay } from "./Leaderboard";
+import { getLeaderboard } from "@/app/actions/donatur";
 
-// Lazy load the rich Leaderboard component AFTER initial render
-const RichLeaderboard = lazy(() => import("./Leaderboard").then(mod => ({ default: mod.Leaderboard })));
+interface ProgressiveLeaderboardProps {
+  initialDonors?: DonorDisplay[];
+}
 
-/**
- * ProgressiveLeaderboard - Shows simple leaderboard for fast LCP, then upgrades to rich version
- */
-export function ProgressiveLeaderboard() {
-    const [showRich, setShowRich] = useState(false);
+export function ProgressiveLeaderboard({ initialDonors = [] }: ProgressiveLeaderboardProps) {
+  const [showRich, setShowRich] = useState(false);
 
-    useEffect(() => {
-        // Wait until page is interactive, then load rich components
-        const timer = setTimeout(() => {
-            if ('requestIdleCallback' in window) {
-                (window as any).requestIdleCallback(() => {
-                    setShowRich(true);
-                }, { timeout: 3000 });
-            } else {
-                setShowRich(true);
-            }
-        }, 2500); // Wait 2.5 seconds after mount (after hero loads)
+  const { data: donors, isLoading } = useQuery({
+    queryKey: ["leaderboard"],
+    queryFn: () => getLeaderboard(),
+    initialData: initialDonors,
+  });
 
-        return () => clearTimeout(timer);
-    }, []);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowRich(true);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
-    if (!showRich) {
-        return <SimpleLeaderboard />;
-    }
+  const LeaderboardComponent = showRich ? Leaderboard : SimpleLeaderboard;
 
-    return (
-        <Suspense fallback={<SimpleLeaderboard />}>
-            <RichLeaderboard />
-        </Suspense>
-    );
+  return (
+    <Suspense fallback={<SimpleLeaderboard donors={donors || []} isLoading={isLoading} />}>
+      <LeaderboardComponent donors={donors || []} isLoading={isLoading} />
+    </Suspense>
+  );
 }
 
 export default ProgressiveLeaderboard;

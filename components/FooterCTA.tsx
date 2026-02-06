@@ -42,7 +42,7 @@ export function FooterCTA() {
 
                 <button
                     onClick={handleDonateClick}
-                    className="group relative px-10 py-5 bg-accent-primary text-background font-bold text-lg rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_-5px_var(--color-accent-primary)] cursor-pointer"
+                    className="group relative px-10 py-5 bg-accent-primary text-white font-bold text-lg rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_-5px_var(--color-accent-primary)] cursor-pointer"
                 >
                     <span className="relative z-10">{isOpen ? "Tutup Donasi" : "Donasi Sekarang"}</span>
                     <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
@@ -76,7 +76,7 @@ export function FooterCTA() {
                                                 { id: 3, label: "Bayar", icon: "✅" },
                                                 { id: 4, label: "Screenshot", icon: "📸" },
                                                 { id: 5, label: "Konfirmasi", icon: "💬" }
-                                            ].map((step, index) => (
+                                            ].map((step) => (
                                                 <div key={step.id} className="flex flex-col items-center gap-2 group cursor-default">
                                                     <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-accent-primary/20 border border-accent-primary text-accent-primary flex items-center justify-center text-xs md:text-sm font-bold shadow-[0_0_10px_-2px_var(--color-accent-primary)] z-10 group-hover:scale-110 transition-transform bg-black">
                                                         {step.id}

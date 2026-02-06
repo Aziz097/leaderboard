@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useState } from "react";
 import Image from "next/image";
 
@@ -34,7 +33,7 @@ export function SimpleFooterCTA() {
 
                 <button
                     onClick={handleDonateClick}
-                    className="group relative px-10 py-5 bg-accent-primary text-background font-bold text-lg rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_-5px_var(--color-accent-primary)] cursor-pointer"
+                    className="group relative px-10 py-5 bg-accent-primary text-white font-bold text-lg rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_-5px_var(--color-accent-primary)] cursor-pointer"
                 >
                     <span className="relative z-10">{isOpen ? "Tutup Donasi" : "Donasi Sekarang"}</span>
                     <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
