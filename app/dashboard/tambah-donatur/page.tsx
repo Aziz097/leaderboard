@@ -16,7 +16,6 @@ export default function TambahDonaturPage() {
   const queryClient = useQueryClient();
   const [nama, setNama] = useState("");
   const [jumlah, setJumlah] = useState("");
-  const [note, setNote] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const { data: existingDonaturs, isLoading: isSearching } = useQuery({
@@ -30,7 +29,7 @@ export default function TambahDonaturPage() {
       createDonasi({
         nama,
         jumlah: parseFloat(jumlah),
-        note: note || undefined,
+       
         existingId: selectedId || undefined,
       }),
     onSuccess: (result) => {

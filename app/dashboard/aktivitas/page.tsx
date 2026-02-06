@@ -17,7 +17,6 @@ import { getAllAktivitas } from "@/app/actions/donatur";
 type AktivitasRow = {
   id: string;
   amount: number;
-  note: string | null;
   createdAt: string;
   donatur: string;
   user: string | null;
@@ -82,7 +81,7 @@ export default function AktivitasPage() {
                       <TableCell className="text-white/50">{(page - 1) * 20 + index + 1}</TableCell>
                       <TableCell className="text-white/70">{formatDate(item.createdAt)}</TableCell>
                       <TableCell className="text-white font-medium">{item.donatur}</TableCell>
-                      <TableCell className="text-white/70">{item.note || "-"}</TableCell>
+                      
                       <TableCell className="text-white/50">{item.user || "-"}</TableCell>
                       <TableCell className="text-white text-right font-medium">{formatCurrency(item.amount)}</TableCell>
                     </TableRow>

@@ -5,9 +5,9 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 
-export async function createDonasi(data: { nama: string; jumlah: number; note?: string; existingId?: string }) {
+export async function createDonasi(data: { nama: string; jumlah: number; existingId?: string }) {
   const session = await auth();
-  const { nama, jumlah, note, existingId } = data;
+  const { nama, jumlah, existingId } = data;
 
   if (!nama || !jumlah) {
     return { error: "Nama dan jumlah wajib diisi" };
@@ -18,7 +18,6 @@ export async function createDonasi(data: { nama: string; jumlah: number; note?: 
   if (existingId) {
     const data = {
       amount: jumlah,
-      note: note || null,
       donaturId: existingId,
       userId: userId || undefined,
     };
@@ -31,7 +30,6 @@ export async function createDonasi(data: { nama: string; jumlah: number; note?: 
     if (existingDonatur) {
       const data = {
         amount: jumlah,
-        note: note || null,
         donaturId: existingDonatur.id,
         userId: userId || undefined,
       };
@@ -42,7 +40,6 @@ export async function createDonasi(data: { nama: string; jumlah: number; note?: 
         donasis: {
           create: {
             amount: jumlah,
-            note: note || null,
             userId: userId || undefined,
           },
         },
@@ -149,7 +146,6 @@ export async function getAllAktivitas({ page = 1, limit = 20 }: { page?: number;
   const data = donasis.map((donasi) => ({
     id: donasi.id,
     amount: donasi.amount,
-    note: donasi.note,
     createdAt: donasi.createdAt.toISOString(),
     donatur: donasi.donatur.name,
     user: donasi.user?.name || null,

@@ -22,7 +22,6 @@ async function getStats() {
     recentDonasis: recentDonasis as Array<{
       id: string;
       amount: number;
-      note: string | null;
       createdAt: Date;
       donatur: { name: string };
       user: { name: string | null };
@@ -110,9 +109,6 @@ export default async function DashboardPage() {
                     <div>
                       <p className="font-medium text-white">
                         {donasi.donatur.name}
-                      </p>
-                      <p className="text-sm text-white/50">
-                        {donasi.note || "Donasi"}
                       </p>
                       {donasi.user && (
                         <p className="text-xs text-white/30 mt-1">

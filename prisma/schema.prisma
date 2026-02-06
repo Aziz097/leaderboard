@@ -81,7 +81,6 @@ model Donatur {
 model Donasi {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   amount    Float
-  note      String?
   createdAt DateTime @default(now())
   donaturId String   @db.ObjectId
   donatur   Donatur  @relation(fields: [donaturId], references: [id], onDelete: Cascade)
